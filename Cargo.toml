@@ -1,0 +1,13 @@
+[package]
+name = "node_group"
+version = "0.1.0"
+edition = "2024"
+
+
+[lib]
+name = "node_group"
+crate-type = ["cdylib"]
+
+
+[dependencies]
+pyo3 = { version = "0.20", features = ["extension-module", "abi3-py39"] }
