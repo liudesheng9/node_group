@@ -1,24 +1,21 @@
 from .node_group import PyIdNode, PyIdPair, group_id_pairs as group_id_pairs_rs
-from typing import List
-
-
+from typing import List, Union
 
 
 class IdNode:
     inner: PyIdNode
 
-    def __init__(self, id_type: str, id_name: str):
-        self.inner = PyIdNode(id_type, id_name)
-
-    def __init__(self, inner: PyIdNode):
-        self.inner = inner
+    def __init__(self, id_type_or_inner: Union[str, PyIdNode], id_name: str = None):
+        if isinstance(id_type_or_inner, PyIdNode):
+            self.inner = id_type_or_inner
+        elif isinstance(id_type_or_inner, str) and id_name is not None:
+            self.inner = PyIdNode(id_type_or_inner, id_name)
+        else:
+            raise TypeError("Invalid arguments for IdNode constructor")
 
     @staticmethod
     def from_string(id_str: str) -> "IdNode":
-        py_id_node = PyIdNode.from_string(id_str)
-        node = IdNode(py_id_node.id_type, py_id_node.id_name)
-        node.inner = py_id_node
-        return node
+        return IdNode(PyIdNode.from_string(id_str))
 
     @property
     def id_name(self) -> str:
@@ -60,21 +57,17 @@ class IdPair:
     @staticmethod
     def from_string(id_pair_str: str) -> "IdPair":
         py_id_pair = PyIdPair.from_string(id_pair_str)
-        node1 = IdNode(py_id_pair.node1().id_type, py_id_pair.node1().id_name)
-        node2 = IdNode(py_id_pair.node2().id_type, py_id_pair.node2().id_name)
-        pair = IdPair(node1, node2)
-        pair.inner = py_id_pair
-        return pair
+        node1 = IdNode(py_id_pair.node1())
+        node2 = IdNode(py_id_pair.node2())
+        return IdPair(node1, node2)
 
     @property
     def node1(self) -> IdNode:
-        py_node = self.inner.node1()
-        return IdNode(py_node.id_type, py_node.id_name)
+        return IdNode(self.inner.node1())
 
     @property
     def node2(self) -> IdNode:
-        py_node = self.inner.node2()
-        return IdNode(py_node.id_type, py_node.id_name)
+        return IdNode(self.inner.node2())
 
     def as_string(self) -> str:
         return self.inner.as_string()

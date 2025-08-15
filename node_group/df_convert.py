@@ -6,6 +6,7 @@ import polars as pl
 from .structs import IdNode, IdPair
 
 
+
 def get_id_pairs_from_df(df: pl.DataFrame) -> List[IdPair]:
     """
     Generates PyIdPairs from a Polars DataFrame.
