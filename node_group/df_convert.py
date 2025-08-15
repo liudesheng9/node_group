@@ -3,10 +3,10 @@ from typing import List
 
 import polars as pl
 
-from .node_group import PyIdNode, PyIdPair
+from .structs import IdNode, IdPair
 
 
-def get_id_pairs_from_df(df: pl.DataFrame) -> List[PyIdPair]:
+def get_id_pairs_from_df(df: pl.DataFrame) -> List[IdPair]:
     """
     Generates PyIdPairs from a Polars DataFrame.
 
@@ -15,7 +15,7 @@ def get_id_pairs_from_df(df: pl.DataFrame) -> List[PyIdPair]:
 
     Returns a list of PyIdPair objects compatible with `node_group.group_id_pairs`.
     """
-    id_pairs: List[PyIdPair] = []
+    id_pairs: List[IdPair] = []
     column_pairs = list(itertools.combinations(df.columns, 2))
 
     for col1, col2 in column_pairs:
@@ -24,9 +24,9 @@ def get_id_pairs_from_df(df: pl.DataFrame) -> List[PyIdPair]:
             pairs_data = filtered_df.select([col1, col2]).to_dicts()
             for pair in pairs_data:
                 # Rust constructor for PyIdNode is (id_type, id_name)
-                node1 = PyIdNode(col1, str(pair[col1]))
-                node2 = PyIdNode(col2, str(pair[col2]))
-                id_pairs.append(PyIdPair(node1, node2))
+                node1 = IdNode(col1, str(pair[col1]))
+                node2 = IdNode(col2, str(pair[col2]))
+                id_pairs.append(IdPair(node1, node2))
     return id_pairs
 
 

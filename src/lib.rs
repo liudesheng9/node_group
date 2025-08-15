@@ -28,6 +28,14 @@ impl IdNode {
     fn get_id_type(&self) -> &str {
         &self.id_type
     }
+
+    fn set_id_name(&mut self, id_name: String) {
+        self.id_name = id_name;
+    }
+
+    fn set_id_type(&mut self, id_type: String) {
+        self.id_type = id_type;
+    }
 }
 
 impl Display for IdNode {
@@ -200,6 +208,16 @@ impl PyIdNode {
     }
     pub fn __repr__(&self) -> String {
         self.inner.to_string()
+    }
+
+    #[setter]
+    pub fn set_id_name(&mut self, id_name: String) {
+        self.inner.set_id_name(id_name);
+    }
+
+    #[setter]
+    pub fn set_id_type(&mut self, id_type: String) {
+        self.inner.set_id_type(id_type);
     }
 }
 
